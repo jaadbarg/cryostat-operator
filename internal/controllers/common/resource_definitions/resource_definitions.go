@@ -67,7 +67,6 @@ type ImageTags struct {
 
 type ServiceSpecs struct {
 	CoreURL    *url.URL
-	CommandURL *url.URL
 	GrafanaURL *url.URL
 }
 
