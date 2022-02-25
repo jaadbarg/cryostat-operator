@@ -408,6 +408,17 @@ var _ = Describe("CryostatController", func() {
 					t.checkService("cryostat-reports", test.NewReportsService())
 				})
 			})
+
+			Context("with Scheduling options", func() {
+				BeforeEach(func() {
+					*cr = *test.NewCryostatWithReportsResources()
+				})
+				It("should configure deployment appropriately", func() {
+					t.checkReportsDeployment()
+				})
+
+			})
+
 			Context("with resource requirements", func() {
 				BeforeEach(func() {
 					*cr = *test.NewCryostatWithReportsResources()
@@ -1183,6 +1194,7 @@ var _ = Describe("CryostatController", func() {
 				})
 			})
 		})
+
 		Context("with resource requirements", func() {
 			BeforeEach(func() {
 				t.objs = append(t.objs, test.NewCryostatWithResources())
@@ -1925,6 +1937,17 @@ func (t *cryostatTestInput) checkReportsDeployment() {
 	checkReportsContainer(&template.Spec.Containers[0], t.TLS, t.EnvReportsImageTag, resources)
 	// Check that the proper Service Account is set
 	Expect(template.Spec.ServiceAccountName).To(Equal("cryostat"))
+
+	if cr.Spec.ReportOptions != nil && cr.Spec.ReportOptions.SchedulingOptions != nil {
+		scheduling := cr.Spec.ReportOptions.SchedulingOptions
+		Expect(template.Spec.NodeSelector).To(Equal(scheduling.NodeSelector))
+		if scheduling.Affinity != nil {
+			Expect(template.Spec.Affinity.PodAffinity).To(Equal(scheduling.Affinity.PodAffinity))
+			Expect(template.Spec.Affinity.PodAntiAffinity).To(Equal(scheduling.Affinity.PodAntiAffinity))
+			Expect(template.Spec.Affinity.NodeAffinity).To(Equal(scheduling.Affinity.NodeAffinity))
+		}
+		Expect(template.Spec.Tolerations).To(Equal(scheduling.Tolerations))
+	}
 }
 
 func (t *cryostatTestInput) checkDeploymentHasTemplates() {
