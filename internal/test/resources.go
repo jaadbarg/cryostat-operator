@@ -312,7 +312,6 @@ func NewCryostatWithReportsScheduling() *operatorv1beta1.Cryostat {
 										Key:      "node",
 										Operator: corev1.NodeSelectorOpIn,
 										Values: []string{
-
 											"good",
 											"better",
 										},
@@ -322,39 +321,17 @@ func NewCryostatWithReportsScheduling() *operatorv1beta1.Cryostat {
 						},
 					},
 				},
-
-					PodAffinity: &corev1.PodAffinity{
-						RequiredDuringSchedulingIgnoredDuringExecution: &corev1.NodeSelector{
-							NodeSelectorTerms: []corev1.NodeSelectorTerm{
-								{
-									MatchExpressions: []corev1.NodeSelectorRequirement{
-										{
-											Key:      "pod",
-											Operator: corev1.NodeSelectorOpIn,
-											Values: []string{
-
-												"good",
-												"better",
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-					PodAntiAffinity: &corev1.PodAntiAffinity{
-						RequiredDuringSchedulingIgnoredDuringExecution: &corev1.NodeSelector{
-							NodeSelectorTerms: []corev1.NodeSelectorTerm{
-								{
-									MatchExpressions: []corev1.NodeSelectorRequirement{
-										{
-											Key:      "pod",
-											Operator: corev1.NodeSelectorOpIn,
-											Values: []string{
-
-												"bad",
-												"worse",
-											},
+				PodAffinity: &corev1.PodAffinity{
+					RequiredDuringSchedulingIgnoredDuringExecution: &corev1.NodeSelector{
+						NodeSelectorTerms: []corev1.NodeSelectorTerm{
+							{
+								MatchExpressions: []corev1.NodeSelectorRequirement{
+									{
+										Key:      "pod",
+										Operator: corev1.NodeSelectorOpIn,
+										Values: []string{
+											"good",
+											"better",
 										},
 									},
 								},
@@ -362,21 +339,38 @@ func NewCryostatWithReportsScheduling() *operatorv1beta1.Cryostat {
 						},
 					},
 				},
-
+				PodAntiAffinity: &corev1.PodAntiAffinity{
+					RequiredDuringSchedulingIgnoredDuringExecution: &corev1.NodeSelector{
+						NodeSelectorTerms: []corev1.NodeSelectorTerm{
+							{
+								MatchExpressions: []corev1.NodeSelectorRequirement{
+									{
+										Key:      "pod",
+										Operator: corev1.NodeSelectorOpIn,
+										Values: []string{
+											"bad",
+											"worse",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			Tolerations: []corev1.Toleration{
 				{
 					Key:      "node",
 					Operator: corev1.NodeSelectorOpIn,
 					Values: []string{
-
 						"good",
 						"better",
 					},
 				},
 			},
 		},
-			},
-		
+	}
+
 	return cr
 }
 
